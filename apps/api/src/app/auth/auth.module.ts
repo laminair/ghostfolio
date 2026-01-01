@@ -17,6 +17,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { LdapStrategy } from './ldap.strategy';
 import { OidcStrategy } from './oidc.strategy';
 
 @Module({
@@ -114,6 +115,33 @@ import { OidcStrategy } from './oidc.strategy';
         };
 
         return new OidcStrategy(authService, options);
+      }
+    },
+    {
+      inject: [AuthService, ConfigurationService],
+      provide: LdapStrategy,
+      useFactory: async (
+        authService: AuthService,
+        configurationService: ConfigurationService
+      ) => {
+        const isLdapEnabled = configurationService.get(
+          'ENABLE_FEATURE_AUTH_LDAP'
+        );
+
+        if (!isLdapEnabled) {
+          return null;
+        }
+
+        const ldapOptions = {
+          url: configurationService.get('LDAP_URL'),
+          bindDN: configurationService.get('LDAP_BIND_DN'),
+          bindCredentials: configurationService.get('LDAP_BIND_CREDENTIALS'),
+          searchBase: configurationService.get('LDAP_SEARCH_BASE'),
+          searchFilter: configurationService.get('LDAP_SEARCH_FILTER') || '(uid={{username}})',
+          searchAttributes: (configurationService.get('LDAP_SEARCH_ATTRIBUTES') || 'displayName,mail,cn').split(',')
+        };
+
+        return new LdapStrategy(authService, ldapOptions);
       }
     },
     WebAuthService

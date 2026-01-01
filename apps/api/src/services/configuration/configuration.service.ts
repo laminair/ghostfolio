@@ -41,6 +41,7 @@ export class ConfigurationService {
         default: []
       }),
       ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
+      ENABLE_FEATURE_AUTH_LDAP: bool({ default: false }),
       ENABLE_FEATURE_AUTH_OIDC: bool({ default: false }),
       ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
@@ -56,6 +57,32 @@ export class ConfigurationService {
       GOOGLE_SHEETS_PRIVATE_KEY: str({ default: '' }),
       HOST: host({ default: DEFAULT_HOST }),
       JWT_SECRET_KEY: str(),
+      LDAP_BIND_CREDENTIALS: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_LDAP === true;
+        }
+      }),
+      LDAP_BIND_DN: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_LDAP === true;
+        }
+      }),
+      LDAP_SEARCH_ATTRIBUTES: str({ default: 'displayName,mail,cn' }),
+      LDAP_SEARCH_BASE: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_LDAP === true;
+        }
+      }),
+      LDAP_SEARCH_FILTER: str({ default: '(uid={{username}})' }),
+      LDAP_URL: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_LDAP === true;
+        }
+      }),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
       OIDC_AUTHORIZATION_URL: str({ default: '' }),

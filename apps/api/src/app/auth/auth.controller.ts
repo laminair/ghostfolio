@@ -134,6 +134,37 @@ export class AuthController {
     }
   }
 
+  @Post('ldap')
+  @UseGuards(AuthGuard('ldap'))
+  public async ldapLogin(
+    @Req() request: Request
+  ): Promise<OAuthResponse> {
+    if (!this.configurationService.get('ENABLE_FEATURE_AUTH_LDAP')) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      const jwt: string = (request.user as any).jwt;
+      
+      if (jwt) {
+        return { authToken: jwt };
+      } else {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.UNAUTHORIZED),
+          StatusCodes.UNAUTHORIZED
+        );
+      }
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.UNAUTHORIZED),
+        StatusCodes.UNAUTHORIZED
+      );
+    }
+  }
+
   @Post('webauthn/generate-authentication-options')
   public async generateAuthenticationOptions(
     @Body() body: { deviceId: string }

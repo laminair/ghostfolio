@@ -17,6 +17,7 @@ export interface Environment extends CleanedEnvAccessors {
   DATA_SOURCES: string[];
   DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: string[];
   ENABLE_FEATURE_AUTH_GOOGLE: boolean;
+  ENABLE_FEATURE_AUTH_LDAP: boolean;
   ENABLE_FEATURE_AUTH_OIDC: boolean;
   ENABLE_FEATURE_AUTH_TOKEN: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
@@ -31,6 +32,12 @@ export interface Environment extends CleanedEnvAccessors {
   GOOGLE_SHEETS_ID: string;
   GOOGLE_SHEETS_PRIVATE_KEY: string;
   JWT_SECRET_KEY: string;
+  LDAP_BIND_CREDENTIALS: string;
+  LDAP_BIND_DN: string;
+  LDAP_SEARCH_ATTRIBUTES: string;
+  LDAP_SEARCH_BASE: string;
+  LDAP_SEARCH_FILTER: string;
+  LDAP_URL: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_CHART_ITEMS: number;
   OIDC_AUTHORIZATION_URL: string;
